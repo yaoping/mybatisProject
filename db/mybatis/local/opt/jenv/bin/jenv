@@ -1,0 +1,2 @@
+#!/bin/bash
+exec "/usr/local/Cellar/jenv/20130917/libexec/bin/jenv" "$@"

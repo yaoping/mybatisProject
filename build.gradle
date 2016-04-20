@@ -1,0 +1,46 @@
+group 'mybatisProject'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+}
+sourceSets {
+    integrationTest {
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+}
+
+dependencies {
+    compile 'org.springframework:spring-webmvc:3.2.6.RELEASE'
+    compile 'org.springframework:spring-jdbc:3.1.0.RELEASE'
+    compile 'org.mybatis:mybatis:3.2.4'
+    compile 'mysql:mysql-connector-java:5.1.35'
+    compile 'log4j:log4j:1.2.17'
+    compile 'org.hibernate:hibernate-validator:4.2.0.Final'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+task initDB(type: Exec) {
+    workingDir 'db'
+    commandLine './mybatis/bin/migrate', 'up'
+}
+
+task integrationTest(type: Test) {
+    mustRunAfter test
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+}
+
+
